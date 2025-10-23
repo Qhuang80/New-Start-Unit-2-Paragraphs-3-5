@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>新起点Unit 2 Text A 词汇游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a6c2a, #1fb26c, #2dfdb2);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        .screen {
+            display: none;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+        
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin: 15px 0;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+            color: #4FC3F7;
+        }
+        
+        h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 10px 0 20px;
+            color: #4FC3F7;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: linear-gradient(to right, #2196F3, #21CBF3);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: 2px solid #4FC3F7;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #00C853, #64DD17);
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .game-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid transparent;
+        }
+        
+        .game-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+        
+        .game-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .game-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .game-area {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            min-height: 300px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-matched {
+            background: #C8E6C9;
+            color: #1B5E20;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .option.correct {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background: #F44336;
+            color: white;
+        }
+        
+        .stats {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .error-list {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .error-item {
+            background: rgba(244, 67, 54, 0.2);
+            border-radius: 5px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        
+        .eco-icon {
+            text-align: center;
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            min-height: 30px;
+        }
+        
+        .success {
+            color: #4CAF50;
+        }
+        
+        .error {
+            color: #F44336;
+        }
+        
+        .export-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #FF9800;
+            color: black;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        
+        .innovation-progress {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .innovation-path {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .path-node {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #4FC3F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .path-node.completed {
+            background: #4CAF50;
+        }
+        
+        .path-node.current {
+            background: #FF9800;
+            transform: scale(1.2);
+        }
+        
+        .path-connector {
+            flex: 1;
+            height: 3px;
+            background: #4FC3F7;
+        }
+        
+        .path-connector.completed {
+            background: #4CAF50;
+        }
+        
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 登录界面 -->
+        <div id="login-screen" class="screen active">
+            <h1>新起点Unit 2 Text A 词汇游戏</h1>
+            <div class="eco-icon">🌱♻️</div>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.1rem;">
+                欢迎来到新起点Unit 2 Text A 3~5段词汇游戏！通过游戏学习英语词汇。
+            </p>
+            
+            <div class="input-group">
+                <label for="student-name">请输入你的姓名：</label>
+                <input type="text" id="student-name" placeholder="例如：张小明">
+            </div>
+            
+            <button id="start-btn" class="btn">开始游戏</button>
+        </div>
+        
+        <!-- 主地图界面 -->
+        <div id="map-screen" class="screen">
+            <h1>新起点Unit 2 Text A 3~5段词汇游戏</h1>
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+            
+            <div class="game-grid">
+                <div class="game-card" data-game="match">
+                    <h3>创意配对室</h3>
+                    <p>词汇配对游戏</p>
+                    <span class="badge" id="match-badge">未开始</span>
+                </div>
+                
+                <div class="game-card" data-game="memory">
+                    <h3>记忆挑战区</h3>
+                    <p>记忆翻牌游戏</p>
+                    <span class="badge" id="memory-badge">未开始</span>
+                </div>
+                
+                <div class="game-card" data-game="innovation">
+                    <h3>创新挑战赛</h3>
+                    <p>路径选择挑战</p>
+                    <span class="badge" id="innovation-badge">未开始</span>
+                </div>
+                
+                <div class="game-card" data-game="stats">
+                    <h3>学习数据中心</h3>
+                    <p>查看学习进度</p>
+                </div>
+            </div>
+            
+            <button id="export-btn" class="btn btn-secondary">导出学习数据</button>
+        </div>
+        
+        <!-- 配对游戏界面 -->
+        <div id="match-screen" class="screen">
+            <h1>创意配对室</h1>
+            <h2>词汇配对游戏</h2>
+            
+            <div class="game-area" id="match-area">
+                <!-- 游戏内容由JS动态生成 -->
+            </div>
+            
+            <div class="feedback" id="match-feedback"></div>
+            
+            <button id="back-to-map" class="btn btn-secondary">返回地图</button>
+        </div>
+        
+        <!-- 记忆翻牌界面 -->
+        <div id="memory-screen" class="screen">
+            <h1>记忆挑战区</h1>
+            <h2>记忆翻牌游戏</h2>
+            
+            <div class="game-area" id="memory-area">
+                <!-- 游戏内容由JS动态生成 -->
+            </div>
+            
+            <div class="feedback" id="memory-feedback"></div>
+            
+            <button id="back-to-map-2" class="btn btn-secondary">返回地图</button>
+        </div>
+        
+        <!-- 创新挑战界面 -->
+        <div id="innovation-screen" class="screen">
+            <h1>创新挑战赛</h1>
+            <h2>路径选择挑战</h2>
+            
+            <div class="innovation-progress" id="innovation-progress">
+                第 <span id="current-question">1</span>/5 题
+            </div>
+            
+            <div class="innovation-path">
+                <div class="path-node completed">1</div>
+                <div class="path-connector"></div>
+                <div class="path-node">2</div>
+                <div class="path-connector"></div>
+                <div class="path-node">3</div>
+                <div class="path-connector"></div>
+                <div class="path-node">4</div>
+                <div class="path-connector"></div>
+                <div class="path-node">5</div>
+            </div>
+            
+            <div class="game-area" id="innovation-area">
+                <!-- 游戏内容由JS动态生成 -->
+            </div>
+            
+            <div class="feedback" id="innovation-feedback"></div>
+            
+            <button id="back-to-map-3" class="btn btn-secondary">返回地图</button>
+        </div>
+        
+        <!-- 数据统计界面 -->
+        <div id="stats-screen" class="screen">
+            <h1>学习数据中心</h1>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span>学生姓名：</span>
+                    <span id="stats-name">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>学习进度：</span>
+                    <span id="stats-progress">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span>已掌握词汇：</span>
+                    <span id="stats-mastered">0/30</span>
+                </div>
+                <div class="stat-item">
+                    <span>总错误次数：</span>
+                    <span id="stats-errors">0</span>
+                </div>
+            </div>
+            
+            <h3>错误词汇排行</h3>
+            <div class="error-list" id="error-list">
+                <!-- 错误列表由JS动态生成 -->
+            </div>
+            
+            <button id="back-to-map-4" class="btn">返回地图</button>
+        </div>
+        
+        <!-- 数据导出界面 -->
+        <div id="export-screen" class="screen">
+            <h1>导出学习数据</h1>
+            
+            <p style="margin-bottom: 15px; text-align: center;">
+                请复制下面的数据发送给你的老师：
+            </p>
+            
+            <div class="export-box" id="export-data">
+                请先完成游戏以生成数据
+            </div>
+            
+            <button id="copy-btn" class="btn">复制数据</button>
+            <button id="back-to-map-5" class="btn btn-secondary">返回地图</button>
+        </div>
+    </div>
+
+    <script>
+        // 新词汇数据
+        const vocabulary = [
+            { en: "club", cn: "俱乐部" },
+            { en: "coding", cn: "编程" },
+            { en: "participate in", cn: "参加" },
+            { en: "competition", cn: "比赛" },
+            { en: "create", cn: "创造" },
+            { en: "new invention", cn: "新发明" },
+            { en: "such as", cn: "例如" },
+            { en: "smart tool", cn: "智能工具" },
+            { en: "eco-friendly", cn: "环保的" },
+            { en: "campus", cn: "校园" },
+            { en: "solar panel", cn: "太阳能板" },
+            { en: "produce", cn: "产生" },
+            { en: "clean energy", cn: "清洁能源" },
+            { en: "cafeteria", cn: "食堂" },
+            { en: "recycle", cn: "回收" },
+            { en: "food waste", cn: "食物浪费" },
+            { en: "finish studies", cn: "完成学业" },
+            { en: "most", cn: "大多数" },
+            { en: "find jobs", cn: "找工作" },
+            { en: "quickly", cn: "快速地" },
+            { en: "official data", cn: "官方数据" },
+            { en: "graduate employment rate", cn: "毕业生就业率" },
+            { en: "remain", cn: "保持" },
+            { en: "consistently", cn: "一贯地，始终如一地" },
+            { en: "above", cn: "在……之上" },
+            { en: "start one's own business", cn: "自主创业" },
+            { en: "learning-by-doing approach", cn: "实践学习法" },
+            { en: "prepare...for...", cn: "为……准备……" },
+            { en: "real world", cn: "现实世界" },
+            { en: "awesome", cn: "很棒的，了不起的" }
+        ];
+        
+        // 创新挑战赛题目库
+        const innovationQuestions = [
+            {
+                question: "学生们喜欢参加各种____，比如机器人俱乐部。",
+                correctAnswer: "club",
+                options: ["club", "coding", "competition"],
+                correctWord: "club"
+            },
+            {
+                question: "_____是一门重要的技能，可以帮助我们创造新发明。",
+                correctAnswer: "coding",
+                options: ["coding", "create", "recycle"],
+                correctWord: "coding"
+            },
+            {
+                question: "许多学生选择_____环保项目，为校园做出贡献。",
+                correctAnswer: "participate in",
+                options: ["participate in", "finish studies", "find jobs"],
+                correctWord: "participate in"
+            },
+            {
+                question: "学校每年都会举办创新_____，鼓励学生展示他们的创意。",
+                correctAnswer: "competition",
+                options: ["competition", "campus", "cafeteria"],
+                correctWord: "competition"
+            },
+            {
+                question: "学生们使用_____方法，把理论知识和实践技能结合起来。",
+                correctAnswer: "learning-by-doing approach",
+                options: ["learning-by-doing approach", "real-life skill", "bright future"],
+                correctWord: "learning-by-doing approach"
+            },
+            {
+                question: "太阳能板可以_____清洁能源，减少对化石燃料的依赖。",
+                correctAnswer: "produce",
+                options: ["produce", "recycle", "create"],
+                correctWord: "produce"
+            },
+            {
+                question: "学校食堂采取措施减少_____，提倡节约粮食。",
+                correctAnswer: "food waste",
+                options: ["food waste", "clean energy", "smart tool"],
+                correctWord: "food waste"
+            },
+            {
+                question: "毕业生就业率_____保持在较高水平，显示学校教育的成功。",
+                correctAnswer: "consistently",
+                options: ["consistently", "quickly", "above"],
+                correctWord: "consistently"
+            }
+        ];
+        
+        // 游戏状态
+        const gameState = {
+            studentName: "",
+            studentId: "",
+            progress: 0,
+            gamesCompleted: {
+                match: false,
+                memory: false,
+                innovation: false
+            },
+            errors: {},
+            masteredWords: [],
+            // 创新挑战赛状态
+            innovationGame: {
+                currentQuestion: 0,
+                correctAnswers: 0,
+                totalQuestions: 5, // 总共需要回答5道题
+                usedQuestions: new Set() // 记录已经使用过的问题索引
+            }
+        };
+        
+        // DOM 元素
+        const screens = {
+            login: document.getElementById('login-screen'),
+            map: document.getElementById('map-screen'),
+            match: document.getElementById('match-screen'),
+            memory: document.getElementById('memory-screen'),
+            innovation: document.getElementById('innovation-screen'),
+            stats: document.getElementById('stats-screen'),
+            export: document.getElementById('export-screen')
+        };
+        
+        // 初始化游戏
+        function initGame() {
+            // 尝试加载保存的游戏状态
+            const savedState = localStorage.getItem('spuInnovationState');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                Object.assign(gameState, parsedState);
+                
+                // 恢复Set对象
+                if (parsedState.innovationGame && parsedState.innovationGame.usedQuestions) {
+                    gameState.innovationGame.usedQuestions = new Set(parsedState.innovationGame.usedQuestions);
+                }
+                
+                // 如果已经有学生信息，直接进入地图
+                if (gameState.studentName) {
+                    showScreen('map');
+                    updateProgress();
+                    updateBadges();
+                }
+            }
+            
+            // 设置事件监听器
+            document.getElementById('start-btn').addEventListener('click', startGame);
+            document.getElementById('export-btn').addEventListener('click', showExportScreen);
+            
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const gameType = card.dataset.game;
+                    if (gameType === 'stats') {
+                        showStatsScreen();
+                    } else {
+                        startGameSession(gameType);
+                    }
+                });
+            });
+            
+            document.getElementById('back-to-map').addEventListener('click', () => showScreen('map'));
+            document.getElementById('back-to-map-2').addEventListener('click', () => showScreen('map'));
+            document.getElementById('back-to-map-3').addEventListener('click', () => showScreen('map'));
+            document.getElementById('back-to-map-4').addEventListener('click', () => showScreen('map'));
+            document.getElementById('back-to-map-5').addEventListener('click', () => showScreen('map'));
+            
+            document.getElementById('copy-btn').addEventListener('click', copyExportData);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            const studentName = document.getElementById('student-name').value.trim();
+            
+            if (!studentName) {
+                alert('请输入你的姓名');
+                return;
+            }
+            
+            gameState.studentName = studentName;
+            gameState.studentId = 'STU' + Math.floor(1000 + Math.random() * 9000);
+            
+            // 保存状态
+            saveGameState();
+            
+            // 进入地图界面
+            showScreen('map');
+            updateProgress();
+        }
+        
+        // 显示指定屏幕
+        function showScreen(screenName) {
+            // 隐藏所有屏幕
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // 显示请求的屏幕
+            screens[screenName].classList.add('active');
+            
+            // 特殊处理
+            if (screenName === 'map') {
+                updateBadges();
+            } else if (screenName === 'stats') {
+                showStatsScreen();
+            } else if (screenName === 'export') {
+                showExportScreen();
+            }
+        }
+        
+        // 开始游戏会话
+        function startGameSession(gameType) {
+            showScreen(gameType);
+            
+            switch (gameType) {
+                case 'match':
+                    setupMatchGame();
+                    break;
+                case 'memory':
+                    setupMemoryGame();
+                    break;
+                case 'innovation':
+                    setupInnovationGame();
+                    break;
+            }
+        }
+        
+        // 设置配对游戏
+        function setupMatchGame() {
+            const gameArea = document.getElementById('match-area');
+            const feedback = document.getElementById('match-feedback');
+            gameArea.innerHTML = '';
+            feedback.innerHTML = '';
+            
+            // 随机选择8个词汇
+            const gameWords = getRandomWords(8);
+            const englishWords = [...gameWords];
+            const chineseWords = [...gameWords];
+            
+            // 打乱顺序
+            shuffleArray(englishWords);
+            shuffleArray(chineseWords);
+            
+            // 创建英文卡片
+            englishWords.forEach(word => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = word.en;
+                card.dataset.word = word.en;
+                card.addEventListener('click', () => selectCard(card, 'en'));
+                gameArea.appendChild(card);
+            });
+            
+            // 创建中文卡片
+            chineseWords.forEach(word => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = word.cn;
+                card.dataset.word = word.en;
+                card.addEventListener('click', () => selectCard(card, 'cn'));
+                gameArea.appendChild(card);
+            });
+            
+            // 重置选择状态
+            window.selectedCard = null;
+        }
+        
+        // 卡片选择逻辑
+        function selectCard(card, type) {
+            if (card.classList.contains('card-matched')) return;
+            
+            if (!window.selectedCard) {
+                // 第一次选择
+                window.selectedCard = {
+                    element: card,
+                    type: type,
+                    word: card.dataset.word
+                };
+                card.style.backgroundColor = '#E3F2FD';
+            } else {
+                // 第二次选择
+                if (window.selectedCard.type === type) {
+                    // 相同类型，重置选择
+                    window.selectedCard.element.style.backgroundColor = '';
+                    window.selectedCard = {
+                        element: card,
+                        type: type,
+                        word: card.dataset.word
+                    };
+                    card.style.backgroundColor = '#E3F2FD';
+                    return;
+                }
+                
+                // 检查是否匹配
+                const feedback = document.getElementById('match-feedback');
+                if (window.selectedCard.word === card.dataset.word) {
+                    // 匹配成功
+                    card.classList.add('card-matched');
+                    window.selectedCard.element.classList.add('card-matched');
+                    feedback.innerHTML = '<span class="success">✓ 匹配正确！</span>';
+                    
+                    // 记录掌握词汇
+                    if (!gameState.masteredWords.includes(window.selectedCard.word)) {
+                        gameState.masteredWords.push(window.selectedCard.word);
+                    }
+                    
+                    // 检查游戏是否完成
+                    const matchedCards = document.querySelectorAll('.card-matched');
+                    if (matchedCards.length === 16) {
+                        setTimeout(() => {
+                            feedback.innerHTML = '<span class="success">🎉🎉 恭喜你完成配对游戏！</span>';
+                            gameState.gamesCompleted.match = true;
+                            updateProgress();
+                            saveGameState();
+                        }, 500);
+                    }
+                } else {
+                    // 匹配失败
+                    feedback.innerHTML = '<span class="error">✗✗ 匹配错误，请再试一次</span>';
+                    
+                    // 记录错误
+                    recordError(window.selectedCard.word);
+                    
+                    // 短暂显示后重置颜色
+                    setTimeout(() => {
+                        card.style.backgroundColor = '';
+                        window.selectedCard.element.style.backgroundColor = '';
+                        window.selectedCard = null;
+                    }, 1000);
+                }
+                
+                // 重置选择
+                window.selectedCard = null;
+            }
+        }
+        
+        // 设置记忆翻牌游戏
+        function setupMemoryGame() {
+            const gameArea = document.getElementById('memory-area');
+            const feedback = document.getElementById('memory-feedback');
+            gameArea.innerHTML = '';
+            feedback.innerHTML = '';
+            
+            // 随机选择8个词汇（每个词汇有两张卡片）
+            const gameWords = getRandomWords(8);
+            const cards = [];
+            
+            gameWords.forEach(word => {
+                cards.push({ content: word.en, word: word.en, type: 'en' });
+                cards.push({ content: word.cn, word: word.en, type: 'cn' });
+            });
+            
+            // 打乱卡片顺序
+            shuffleArray(cards);
+            
+            // 创建卡片网格
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.dataset.index = index;
+                cardElement.dataset.word = card.word;
+                cardElement.dataset.type = card.type;
+                cardElement.textContent = '?';
+                
+                cardElement.addEventListener('click', () => flipCard(cardElement));
+                gameArea.appendChild(cardElement);
+            });
+            
+            // 重置游戏状态
+            window.memoryGame = {
+                flippedCards: [],
+                lockBoard: false
+            };
+        }
+        
+        // 翻牌逻辑
+        function flipCard(card) {
+            if (window.memoryGame.lockBoard || card.textContent !== '?') return;
+            
+            const word = vocabulary.find(w => w.en === card.dataset.word);
+            card.textContent = card.dataset.type === 'en' ? word.en : word.cn;
+            card.style.backgroundColor = '#E3F2FD';
+            
+            window.memoryGame.flippedCards.push(card);
+            
+            if (window.memoryGame.flippedCards.length === 2) {
+                window.memoryGame.lockBoard = true;
+                
+                const card1 = window.memoryGame.flippedCards[0];
+                const card2 = window.memoryGame.flippedCards[1];
+                
+                const feedback = document.getElementById('memory-feedback');
+                
+                if (card1.dataset.word === card2.dataset.word) {
+                    // 匹配成功
+                    feedback.innerHTML = '<span class="success">✓ 匹配正确！</span>';
+                    card1.classList.add('card-matched');
+                    card2.classList.add('card-matched');
+                    
+                    // 记录掌握词汇
+                    if (!gameState.masteredWords.includes(card1.dataset.word)) {
+                        gameState.masteredWords.push(card1.dataset.word);
+                    }
+                    
+                    // 检查游戏是否完成
+                    const matchedCards = document.querySelectorAll('.card-matched');
+                    if (matchedCards.length === 16) {
+                        setTimeout(() => {
+                            feedback.innerHTML = '<span class="success">🎉🎉 恭喜你完成记忆游戏！</span>';
+                            gameState.gamesCompleted.memory = true;
+                            updateProgress();
+                            saveGameState();
+                        }, 500);
+                    }
+                    
+                    window.memoryGame.flippedCards = [];
+                    window.memoryGame.lockBoard = false;
+                } else {
+                    // 匹配失败
+                    feedback.innerHTML = '<span class="error">✗✗ 匹配错误</span>';
+                    
+                    // 记录错误
+                    recordError(card1.dataset.word);
+                    recordError(card2.dataset.word);
+                    
+                    setTimeout(() => {
+                        card1.textContent = '?';
+                        card2.textContent = '?';
+                        card1.style.backgroundColor = '';
+                        card2.style.backgroundColor = '';
+                        window.memoryGame.flippedCards = [];
+                        window.memoryGame.lockBoard = false;
+                    }, 1000);
+                }
+            }
+        }
+        
+        // 设置创新挑战赛游戏
+        function setupInnovationGame() {
+            const gameArea = document.getElementById('innovation-area');
+            const feedback = document.getElementById('innovation-feedback');
+            gameArea.innerHTML = '';
+            feedback.innerHTML = '';
+            
+            // 更新进度显示
+            document.getElementById('current-question').textContent = gameState.innovationGame.currentQuestion + 1;
+            
+            // 更新路径显示
+            updateInnovationPath();
+            
+            // 获取一个未使用的问题
+            const question = getUnusedQuestion();
+            if (!question) {
+                // 所有问题都已使用，重新开始
+                gameState.innovationGame.usedQuestions.clear();
+                setupInnovationGame();
+                return;
+            }
+            
+            // 标记问题为已使用
+            gameState.innovationGame.usedQuestions.add(innovationQuestions.indexOf(question));
+            
+            // 创建问题
+            const questionElement = document.createElement('div');
+            questionElement.className = 'card';
+            questionElement.textContent = question.question;
+            gameArea.appendChild(questionElement);
+            
+            // 创建选项
+            const options = document.createElement('div');
+            options.className = 'options';
+            
+            // 打乱选项顺序
+            const shuffledOptions = [...question.options];
+            shuffleArray(shuffledOptions);
+            
+            // 生成选项
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.dataset.correct = (option === question.correctAnswer).toString();
+                optionElement.addEventListener('click', () => checkInnovationAnswer(optionElement, question));
+                options.appendChild(optionElement);
+            });
+            
+            gameArea.appendChild(options);
+        }
+        
+        // 获取未使用的问题
+        function getUnusedQuestion() {
+            const availableQuestions = innovationQuestions.filter((_, index) => 
+                !gameState.innovationGame.usedQuestions.has(index)
+            );
+            
+            if (availableQuestions.length === 0) {
+                return null;
+            }
+            
+            return availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+        }
+        
+        // 更新创新路径显示
+        function updateInnovationPath() {
+            const pathNodes = document.querySelectorAll('.path-node');
+            const pathConnectors = document.querySelectorAll('.path-connector');
+            
+            // 重置所有节点
+            pathNodes.forEach(node => {
+                node.classList.remove('completed', 'current');
+            });
+            pathConnectors.forEach(connector => {
+                connector.classList.remove('completed');
+            });
+            
+            // 设置已完成和当前节点
+            for (let i = 0; i < gameState.innovationGame.currentQuestion; i++) {
+                if (i < pathNodes.length) {
+                    pathNodes[i].classList.add('completed');
+                }
+                if (i < pathConnectors.length) {
+                    pathConnectors[i].classList.add('completed');
+                }
+            }
+            
+            // 设置当前节点
+            if (gameState.innovationGame.currentQuestion < pathNodes.length) {
+                pathNodes[gameState.innovationGame.currentQuestion].classList.add('current');
+            }
+        }
+        
+        // 检查创新挑战答案
+        function checkInnovationAnswer(option, question) {
+            const feedback = document.getElementById('innovation-feedback');
+            const options = document.querySelectorAll('.option');
+            
+            if (option.dataset.correct === "true") {
+                option.classList.add('correct');
+                feedback.innerHTML = '<span class="success">✓ 回答正确！继续前进...</span>';
+                
+                // 记录掌握词汇
+                if (!gameState.masteredWords.includes(question.correctWord)) {
+                    gameState.masteredWords.push(question.correctWord);
+                }
+                
+                // 增加正确计数
+                gameState.innovationGame.correctAnswers++;
+                gameState.innovationGame.currentQuestion++;
+                
+                // 检查是否完成游戏
+                if (gameState.innovationGame.currentQuestion >= gameState.innovationGame.totalQuestions) {
+                    setTimeout(() => {
+                        feedback.innerHTML = '<span class="success">🎉🎉 恭喜你成功通过创新挑战赛！</span>';
+                        gameState.gamesCompleted.innovation = true;
+                        // 重置创新挑战赛状态
+                        gameState.innovationGame.currentQuestion = 0;
+                        gameState.innovationGame.correctAnswers = 0;
+                        gameState.innovationGame.usedQuestions.clear();
+                        updateProgress();
+                        saveGameState();
+                    }, 1500);
+                } else {
+                    // 继续下一题
+                    setTimeout(() => {
+                        setupInnovationGame();
+                    }, 1500);
+                }
+            } else {
+                option.classList.add('incorrect');
+                feedback.innerHTML = '<span class="error">✗✗ 回答错误，请再试一次</span>';
+                
+                // 记录错误
+                recordError(question.correctWord);
+                
+                // 短暂显示后重置
+                setTimeout(() => {
+                    options.forEach(opt => {
+                        opt.classList.remove('correct', 'incorrect');
+                    });
+                    feedback.innerHTML = '';
+                }, 1500);
+            }
+            
+            // 保存游戏状态
+            saveGameState();
+        }
+        
+        // 显示统计屏幕
+        function showStatsScreen() {
+            document.getElementById('stats-name').textContent = gameState.studentName;
+            document.getElementById('stats-progress').textContent = Math.round(gameState.progress) + '%';
+            document.getElementById('stats-mastered').textContent = 
+                `${gameState.masteredWords.length}/${vocabulary.length}`;
+            
+            // 计算总错误次数
+            const totalErrors = Object.values(gameState.errors).reduce((sum, count) => sum + count, 0);
+            document.getElementById('stats-errors').textContent = totalErrors;
+            
+            // 显示错误词汇列表
+            const errorList = document.getElementById('error-list');
+            errorList.innerHTML = '';
+            
+            // 排序错误词汇（错误次数从高到低）
+            const sortedErrors = Object.entries(gameState.errors)
+                .sort((a, b) => b[1] - a[1]);
+            
+            if (sortedErrors.length === 0) {
+                errorList.innerHTML = '<div class="error-item">暂无错误记录</div>';
+            } else {
+                sortedErrors.forEach(([word, count]) => {
+                    const wordData = vocabulary.find(w => w.en === word);
+                    const errorItem = document.createElement('div');
+                    errorItem.className = 'error-item';
+                    errorItem.innerHTML = `
+                        <strong>${wordData.cn}</strong> (${word})
+                        <span style="float: right;">错误: ${count}次</span>
+                    `;
+                    errorList.appendChild(errorItem);
+                });
+            }
+            
+            showScreen('stats');
+        }
+        
+        // 显示导出屏幕
+        function showExportScreen() {
+            const exportData = document.getElementById('export-data');
+            
+            // 生成导出数据
+            const data = {
+                name: gameState.studentName,
+                id: gameState.studentId,
+                progress: gameState.progress,
+                mastered: gameState.masteredWords,
+                errors: gameState.errors,
+                timestamp: new Date().toISOString()
+            };
+            
+            // 转换为Base64字符串
+            const dataString = JSON.stringify(data);
+            const encodedData = btoa(encodeURIComponent(dataString));
+            
+            exportData.textContent = encodedData;
+            showScreen('export');
+        }
+        
+        // 复制导出数据
+        function copyExportData() {
+            const exportData = document.getElementById('export-data');
+            const textArea = document.createElement('textarea');
+            textArea.value = exportData.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            alert('数据已复制到剪贴板！');
+        }
+        
+        // 记录错误
+        function recordError(word) {
+            if (!gameState.errors[word]) {
+                gameState.errors[word] = 0;
+            }
+            gameState.errors[word]++;
+            saveGameState();
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            // 计算完成游戏的数量
+            const completedCount = Object.values(gameState.gamesCompleted).filter(c => c).length;
+            gameState.progress = (completedCount / 3) * 100;
+            
+            // 更新UI
+            document.getElementById('progress').style.width = gameState.progress + '%';
+        }
+        
+        // 更新徽章
+        function updateBadges() {
+            document.getElementById('match-badge').textContent = 
+                gameState.gamesCompleted.match ? '已完成' : '未开始';
+            document.getElementById('memory-badge').textContent = 
+                gameState.gamesCompleted.memory ? '已完成' : '未开始';
+            document.getElementById('innovation-badge').textContent = 
+                gameState.gamesCompleted.innovation ? '已完成' : '未开始';
+        }
+        
+        // 保存游戏状态
+        function saveGameState() {
+            // 将Set转换为数组以便存储
+            const stateToSave = {
+                ...gameState,
+                innovationGame: {
+                    ...gameState.innovationGame,
+                    usedQuestions: Array.from(gameState.innovationGame.usedQuestions)
+                }
+            };
+            
+            localStorage.setItem('spuInnovationState', JSON.stringify(stateToSave));
+        }
+        
+        // 辅助函数：获取随机词汇
+        function getRandomWords(count) {
+            const shuffled = [...vocabulary];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, count);
+        }
+        
+        // 辅助函数：打乱数组顺序
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 初始化游戏
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
